@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.jia.noteapplication.MainActivity">
+    <FrameLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:id="@+id/toolbar"/>
+    </FrameLayout>
+ <!--   <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+    </android.support.v7.widget.RecyclerView>-->
+    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="right|bottom"
+            android:src="@mipmap/add"
+            android:layout_marginBottom="5dp"
+            android:id="@+id/btn_add"
+            />
+    </RelativeLayout>
+
+</LinearLayout>
+
