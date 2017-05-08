@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class MyNoteDatabaseHelper extends SQLiteOpenHelper {
     public  static  final  String CREATE_NOTE=
-            "create table Note(Time Date, Title varchar(20) , Picture BLOB ,Kind varchar(4),Plane varchar(100) )";
+            "create table Note(Time Date, Title varchar(20) , Picture BLOB ,Kind varchar(4),Plane varchar(100),ChangedTime Date )";
 
     private Context mcContext;
     public MyNoteDatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {

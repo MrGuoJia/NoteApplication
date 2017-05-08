@@ -23,6 +23,7 @@ import com.example.jia.noteapplication.Listener.MyOnItemClickListener;
 import com.example.jia.noteapplication.Listener.MyOnItemLongClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import java.io.ByteArrayOutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,17 +53,24 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
     private void LayoutItemClick() {
         adapter.setOnItemClickListener(new MyOnItemClickListener() {
             @Override
-            public void OnItemClickListener(View view, int position) {
+            public void OnItemClickListener(View view, int position) {//点击修改
             Toast.makeText(MainActivity.this,"这是第"+(position+1)+"个备忘录~,长按点击删除哦",Toast.LENGTH_SHORT).show();
-              /*  SQLiteDatabase db=myNoteDatabaseHelper.getWritableDatabase();
-                db.delete("Note","Title=?",new String[]{messagesList.get(position).getTittle()});
-                messagesList.clear();
-                getSqlMessage();*/
+            Intent a=new Intent();
+                a.setClass(MainActivity.this,UpdateActivity.class);
+                byte buff[] = new byte[1024*1024];//看你图有多大..自己看着改
+                buff = Bitmap2Bytes(messagesList.get(position).getBitmap());//这里的LZbitmap是Bitmap类的,跟第一个方法不同
+                a.putExtra("bitmap",buff);//图像
+                a.putExtra("tittle",messagesList.get(position).getTittle());//标题
+
+                a.putExtra("kind",messagesList.get(position).getKind());//类型
+                a.putExtra("plane",messagesList.get(position).getPlane());//详细计划
+                startActivityForResult(a,1000);//
+
             }
         });
         adapter.setOnItemLongClickListener(new MyOnItemLongClickListener() {
             @Override
-            public void OnItemLongClickListener(View view, final int position) {
+            public void OnItemLongClickListener(View view, final int position) {//长按删除功能
                 final int n=position;
                 AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
                 builder.setMessage("确定删除此备忘录吗?");
@@ -71,7 +79,13 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SQLiteDatabase db=myNoteDatabaseHelper.getWritableDatabase();
-                        db.delete("Note","Title=?",new String[]{messagesList.get(n).getTittle()});
+                        /*db.delete("Note","Plane=? and Title=? and Kind=? "
+                                ,new String[]{messagesList.get(n).getPlane()
+                                        ,messagesList.get(n).getTittle()
+                                        ,messagesList.get(n).getKind()} );//多条件删除*/
+                        SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");//将时间改为字符格式
+                        String   date   =   sDateFormat.format(messagesList.get(n).getCreate_time());
+                        db.delete("Note","Time=?",new String[]{date});
                         adapter.notifyDataSetChanged();//
                         messagesList.clear();
                         getSqlMessage();
@@ -131,42 +145,54 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
 
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        adapter.notifyDataSetChanged();
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) { //接收回调的数据
         super.onActivityResult(requestCode, resultCode, data);
-        byte bmpBuff[]= (byte[]) data.getSerializableExtra("bitmap");
-        Bitmap bmp= BitmapFactory.decodeByteArray(bmpBuff, 0, bmpBuff.length);//重新编码出Bitmap对象
-        String tittle=data.getStringExtra("tittle");
-        String kind=data.getStringExtra("kind");
-        String date=data.getStringExtra("date");
-        String plane=data.getStringExtra("plane");
 
-        try {//将获取的字符串date数据转换为Date类型
-            java.text.SimpleDateFormat formatter = new SimpleDateFormat(
-                    "yyyy-MM-dd HH:mm:ss");
-             dateTime = formatter.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        SQLiteDatabase db= myNoteDatabaseHelper.getWritableDatabase();   //生成表
-        ContentValues values=new ContentValues();
-        values.put("Time",date);
-        values.put("Title",tittle);
-        values.put("Picture",bmpBuff);//图片以字节的形式存储
-        values.put("Kind",kind);
-        values.put("Plane",plane);
-        db.insert("Note",null,values);//插入数据库
+
 
         if(requestCode==1001){
+            byte bmpBuff[]= (byte[]) data.getSerializableExtra("bitmap");
+            Bitmap bmp= BitmapFactory.decodeByteArray(bmpBuff, 0, bmpBuff.length);//重新编码出Bitmap对象
+            String tittle=data.getStringExtra("tittle");
+            String kind=data.getStringExtra("kind");
+            String date=data.getStringExtra("date");
+            String plane=data.getStringExtra("plane");
+
+            try {//将获取的字符串date数据转换为Date类型
+                java.text.SimpleDateFormat formatter = new SimpleDateFormat(
+                        "yyyy-MM-dd HH:mm:ss");
+                dateTime = formatter.parse(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            SQLiteDatabase db= myNoteDatabaseHelper.getWritableDatabase();   //生成表
+            ContentValues values=new ContentValues();
+            values.put("Time",date);
+            values.put("Title",tittle);
+            values.put("Picture",bmpBuff);//图片以字节的形式存储
+            values.put("Kind",kind);
+            values.put("Plane",plane);
+            db.insert("Note",null,values);//插入数据库
             messagesList.clear();//先清除掉前面生成的所有list的数据，不然展示的时候会变成两倍
             getSqlMessage();
             Toast.makeText(MainActivity.this,"当前备忘录条数为:"+messagesList.size(),Toast.LENGTH_SHORT).show();
+        }
+            else if(requestCode==1000){
+            SQLiteDatabase db= myNoteDatabaseHelper.getWritableDatabase();   //生成表
+            ContentValues values=new ContentValues();
+            byte bmpBuff[]= (byte[]) data.getSerializableExtra("bitmap");
+            Bitmap bmp= BitmapFactory.decodeByteArray(bmpBuff, 0, bmpBuff.length);//重新编码出Bitmap对象
+            String tittle=data.getStringExtra("tittle");
+            String kind=data.getStringExtra("kind");
+            String date=data.getStringExtra("update");
+            String plane=data.getStringExtra("plane");
+            /*明天将修改的值写入到数据库中，并且把list的数据set一下啊，更新详细见P222*/
+
+
         }
     }
     private void getSqlMessage() {
@@ -196,11 +222,21 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
         cursor.close();
 
     }
+    private byte[] Bitmap2Bytes(Bitmap bm){//将图片转化为2进制数据
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        return baos.toByteArray();
+    }
 
     @Override
     public void refresh() {
         adapter.notifyDataSetChanged();
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
     }
 
 }

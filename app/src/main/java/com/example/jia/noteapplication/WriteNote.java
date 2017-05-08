@@ -25,7 +25,6 @@ import java.util.List;
 public class WriteNote extends AppCompatActivity {
     private ImageView view;
     private EditText editTittle;
-    private EditText edeitKind;
     private EditText editPlane;
     private Button btn_getImage;
     private Button brn_save;
@@ -44,7 +43,8 @@ public class WriteNote extends AppCompatActivity {
 
         initViews();
     }
-    private void initChoices() { List<String> list=new ArrayList<String>();
+    private void initChoices() {
+        List<String> list=new ArrayList<String>();
         list.add("生活"); list.add("娱乐");  list.add("休闲");  list.add("工作");
         spinner= (Spinner) findViewById(R.id.spinner1);
 
@@ -69,11 +69,11 @@ public class WriteNote extends AppCompatActivity {
 
         view= (ImageView) findViewById(R.id.img_kind);
         editTittle= (EditText) findViewById(R.id.edt_msg);
-
         editPlane= (EditText) findViewById(R.id.edt_plane);
         btn_getImage= (Button) findViewById(R.id.btn_getImage);
         brn_save= (Button) findViewById(R.id.btn_save);
-
+        view.setImageResource(R.mipmap.timg);
+        imgMap=convertViewToBitmap(view);//如果不选择相片，则默认为这张图片
         btn_getImage.setOnClickListener(new View.OnClickListener() { //拍照
             @Override
             public void onClick(View v) {
@@ -85,21 +85,28 @@ public class WriteNote extends AppCompatActivity {
         brn_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String tittle=editTittle.getText().toString().trim();
 
+                String  tittle=editTittle.getText().toString().trim();
                 String plane=editPlane.getText().toString().trim();
+                if(tittle.length()==0){
+                    tittle="无标题";//如果标题不写默认为 tittle= 无标题
+
+                } if(plane.length()==0){
+                    plane="无备注";
+                }
+
                 if(tittle.length()==0||plane.length()==0 ||imgMap==null){
-                    Toast.makeText(WriteNote.this,"请把信息补充完整哦！,图片也要选哦",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WriteNote.this,"请填写备注信息",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
 
                 byte buff[] = new byte[1024*1024];//看你图有多大..自己看着改
                 buff = Bitmap2Bytes(imgMap);//这里的LZbitmap是Bitmap类的,跟第一个方法不同
+
                 SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
                 Date time = new Date();
                 String   date   =   sDateFormat.format(time);
-
 
 
                 //在intent传递时:
@@ -142,5 +149,13 @@ public class WriteNote extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         return baos.toByteArray();
+    }
+    public  Bitmap convertViewToBitmap(View view) {//将View转化为Bitmap图片的方法
+        view.destroyDrawingCache();
+        view.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        view.layout(0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(true);
+        return view.getDrawingCache(true);
     }
 }
