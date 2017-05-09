@@ -29,9 +29,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ImageView kind;//拍的照，默认ic_launcher
         TextView msg;//输入标题
         TextView edt_kind;//输入类别
-        TextView tv_time;//时间
+        TextView tv_time;//创建的时间
         TextView edt_plane;//输入备注
-
+        TextView tv_UpdateTime;//获取修改的时间
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -40,7 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             edt_kind= (TextView) itemView.findViewById(R.id.edt_kindResult);
             tv_time= (TextView) itemView.findViewById(R.id.tv_createTime);
             edt_plane= (TextView) itemView.findViewById(R.id.edt_planeResult);
-
+            tv_UpdateTime= (TextView) itemView.findViewById(R.id.tv_UpdateTime);
 
         }
 
@@ -64,14 +64,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         NoteMessage noteMessage=messagesList.get(position);
         holder.msg.setText(noteMessage.getTittle());
         holder.edt_kind.setText(noteMessage.getKind());
-        noteMessage.getCreate_time();
+
         SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");//Date类型格式转换String
         String   date   =   sDateFormat.format(noteMessage.getCreate_time());
+        String updateTime=sDateFormat.format(noteMessage.getChange_time());
         holder.tv_time.setText(date);
+        holder.tv_UpdateTime.setText(updateTime);
         holder.edt_plane.setText(noteMessage.getPlane());
         holder.kind.setImageBitmap(noteMessage.getBitmap());
-
-
         if(itemClickListener!=null){/*自定义item的点击事件不为null，设置监听事件*/
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

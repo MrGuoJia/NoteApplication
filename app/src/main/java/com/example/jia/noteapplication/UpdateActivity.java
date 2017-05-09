@@ -28,7 +28,7 @@ public class UpdateActivity extends AppCompatActivity {
     private Button brn_save_update;
     private static final int CHOOSE_PHOTO=0;
     private Bitmap imgMap_update;
-    private Spinner spinner_update;
+  //  private Spinner spinner_update;
     private ArrayAdapter<String> adapter_update;
     private String Tittle="";
     private String Kind="未选类型";
@@ -39,45 +39,53 @@ public class UpdateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update);
         initItemChoose();
 
-        initChoices();//初始化下拉框
+       initChoices();
         initViews();
         getItemMessages();
+
+
     }
 
-    private void initItemChoose() {//获取传过来的默认下拉框选项的值
+
+    private void initItemChoose() {//获取传过来的默认下拉框选项的值,与图片
         Intent a=getIntent();
+        byte bmpBuff[]= (byte[]) a.getSerializableExtra("bitmap");
         Kind=a.getStringExtra("kind");
+        imgMap_update=BitmapFactory.decodeByteArray(bmpBuff, 0, bmpBuff.length);
     }
 
     private void getItemMessages() {
         Intent cx=getIntent();//将recyclerView 中的值传过来修改
-        byte bmpBuff[]= (byte[]) cx.getSerializableExtra("bitmap");
+
         Tittle=cx.getStringExtra("tittle");
         Kind=cx.getStringExtra("kind");
         Plane=cx.getStringExtra("plane");
 
-        Bitmap bmp= BitmapFactory.decodeByteArray(bmpBuff, 0, bmpBuff.length);//重新编码出Bitmap对象
+
         editTittle_update.setText(Tittle);
         editPlane_update.setText(Plane);
-        view_update.setImageBitmap(bmp);
+        view_update.setImageBitmap(imgMap_update);
 
     }
 
     private void initChoices() {
-        List<String> list=new ArrayList<String>();
-        list.add("生活"); list.add("娱乐");  list.add("休闲");  list.add("工作");
+        List<String> list_update=new ArrayList<String>();
+        list_update.add("生活"); list_update.add("娱乐");  list_update.add("休闲");  list_update.add("工作");
 
-        spinner_update= (Spinner) findViewById(R.id.spinner1_update);
+        Spinner spinner_update= (Spinner) findViewById(R.id.spinner1_update);
 
-        adapter_update=new ArrayAdapter<String>(UpdateActivity.this,android.R.layout.simple_spinner_item,list);
+        adapter_update=new ArrayAdapter<String>(UpdateActivity.this,android.R.layout.simple_spinner_item,list_update);
 
-        adapter_update.setDropDownViewResource(android.R.layout.simple_spinner_item);  /*adapter设置一个下拉列表样式，参数为系统子布局*/
+        adapter_update.setDropDownViewResource(android.R.layout.simple_spinner_item);
+      //adapter设置一个下拉列表样式，参数为系统子布局
+
         spinner_update.setAdapter(adapter_update);
-        for(int i=0;i<list.size();i++){//对比传过来的默认下拉框选项，将选项一致
-            if(Kind.equals(list.get(i))){
+        for(int i=0;i<list_update.size();i++){//对比传过来的默认下拉框选项，将选项一致
+            if(Kind.equals(list_update.get(i))){
                 spinner_update.setSelection(i);
             }
         }
+
         spinner_update.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -104,6 +112,7 @@ public class UpdateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent("android.intent.action.GET_CONTENT");
                 intent.setType("image/*");
+
                 startActivityForResult(intent, CHOOSE_PHOTO);
             }
         });
@@ -113,7 +122,7 @@ public class UpdateActivity extends AppCompatActivity {
                 Tittle=editTittle_update.getText().toString();
                 Plane=editPlane_update.getText().toString();
                 //在点击时，将title等数据在组建上get到，修改的值
-                Intent myIntent = new Intent();
+                Intent i = new Intent();
                 //将imgMap_update转为二进制
                 byte buff[] = new byte[1024*1024];//看你图有多大..自己看着改
                 buff = Bitmap2Bytes(imgMap_update);
@@ -122,12 +131,12 @@ public class UpdateActivity extends AppCompatActivity {
                 String   update   =   sDateFormat.format(time);//取得的是当前的修改时间，记得传回去加到数据库中
 
 
-                myIntent.putExtra("bitmap",buff);//图像
-                myIntent.putExtra("tittle",Tittle);//标题
-                myIntent.putExtra("update",update);//修改时间传过去，在1000接收那写入数据库
-                myIntent.putExtra("kind",Kind);//类型
-                myIntent.putExtra("plane",Plane);//详细计划
-                UpdateActivity.this.setResult(1000,myIntent);
+                i.putExtra("bitmap",buff);//图像
+                i.putExtra("tittle",Tittle);//标题
+                i.putExtra("update",update);//修改时间传主activity过去，在1000接收那写入数据库
+                i.putExtra("kind",Kind);//类型
+                i.putExtra("plane",Plane);//详细计划
+                UpdateActivity.this.setResult(1000,i);
                 finish();
             }
         });

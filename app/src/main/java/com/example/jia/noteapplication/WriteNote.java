@@ -30,7 +30,7 @@ public class WriteNote extends AppCompatActivity {
     private Button brn_save;
     private static final int CHOOSE_PHOTO=0;
     private Bitmap imgMap;
-    private Spinner spinner;
+   // private Spinner spinner;
     private String KIND="未选类型";
     private ArrayAdapter<String> adapter;
 
@@ -46,7 +46,7 @@ public class WriteNote extends AppCompatActivity {
     private void initChoices() {
         List<String> list=new ArrayList<String>();
         list.add("生活"); list.add("娱乐");  list.add("休闲");  list.add("工作");
-        spinner= (Spinner) findViewById(R.id.spinner1);
+        Spinner spinner= (Spinner) findViewById(R.id.spinner1);
 
         adapter=new ArrayAdapter<String>(WriteNote.this,android.R.layout.simple_spinner_item,list);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);  /*adapter设置一个下拉列表样式，参数为系统子布局*/
