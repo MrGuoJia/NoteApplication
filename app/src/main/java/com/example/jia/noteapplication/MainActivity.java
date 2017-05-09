@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
     private SwipeMenuRecyclerView recyclerView;
     private List<NoteMessage> messagesList=new ArrayList<>();//接收备忘录信息
     private MyAdapter adapter;
-  /*  private Date dateTime=new Date();//创建时间
-    private Date changedTime=dateTime;//修改时间*/
     private MyNoteDatabaseHelper myNoteDatabaseHelper;//创建数据库表
     private int itemNum=0;
     @Override
@@ -163,16 +161,6 @@ public class MainActivity extends AppCompatActivity implements DeleteListener {
             String date=data.getStringExtra("date");
             String plane=data.getStringExtra("plane");
 
-      /*      try {//将获取的字符串date数据转换为Date类型
-                java.text.SimpleDateFormat formatter = new SimpleDateFormat(
-                        "yyyy-MM-dd HH:mm:ss");
-               dateTime = formatter.parse(date);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }*/
-          //  SimpleDateFormat sDateFormat   =   new   SimpleDateFormat("yyyy-MM-dd   HH:mm:ss");
-          //  String change=sDateFormat.format(changedTime);
             SQLiteDatabase db= myNoteDatabaseHelper.getWritableDatabase();   //生成表
             ContentValues values=new ContentValues();
             values.put("Time",date);
