@@ -86,6 +86,6 @@
                     android:hint="详细备注"/>
             </LinearLayout>
         </LinearLayout>
-
     </LinearLayout>
+
 </RelativeLayout>

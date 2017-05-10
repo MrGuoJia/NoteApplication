@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.jia.noteapplication.MainActivity">
+    tools:context="com.example.jia.noteapplication.Activity.MainActivity">
     <FrameLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -16,12 +16,6 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             android:id="@+id/toolbar"/>
     </FrameLayout>
-    <!--   <android.support.v7.widget.RecyclerView
-           android:id="@+id/recyclerView"
-           android:layout_weight="1"
-           android:layout_width="match_parent"
-           android:layout_height="0dp">
-       </android.support.v7.widget.RecyclerView>-->
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
@@ -31,6 +25,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+
+            android:layout_marginLeft="5dp"
+            android:layout_alignParentLeft="true"
+            android:src="@mipmap/speak"
+            android:scaleType="centerCrop"
+            android:id="@+id/img_speak"/>
         <android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
