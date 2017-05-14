@@ -1,10 +1,15 @@
 package com.example.jia.noteapplication.Activity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +23,7 @@ import com.example.jia.noteapplication.ImgUtil;
 import com.example.jia.noteapplication.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +37,7 @@ public class WriteNote extends AppCompatActivity {
     private Button brn_save;
     private static final int CHOOSE_PHOTO=0;
     private Bitmap imgMap;
-   // private Spinner spinner;
+
     private String KIND="未选类型";
     private ArrayAdapter<String> adapter;
 
@@ -134,13 +140,24 @@ public class WriteNote extends AppCompatActivity {
                         //4.4及以上系统使用这个方法处理图片
                         bitmap = ImgUtil.handleImageOnKitKat(this, data);        //ImgUtil是自己实现的一个工具类
                         imgMap=bitmap;//用来传图片
+
+
                     } else {
                         //4.4以下系统使用这个方法处理图片
                         bitmap = ImgUtil.handleImageBeforeKitKat(this, data);
                         imgMap=bitmap;
+
+                        Uri originalUri3=data.getData();//获取图片uri
+                        String []imgs13={MediaStore.Images.Media.DATA};//将图片URI转换成存储
+                        Cursor cursor3=this.managedQuery(originalUri3, imgs13, null, null, null);
+                        int index3=cursor3.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        cursor3.moveToFirst();
+                        String img_url3=cursor3.getString(index3);
+                        Toast.makeText(WriteNote.this,"图片路径为2"+img_url3,Toast.LENGTH_SHORT).show();
                     }
                     view.setImageBitmap(bitmap);
                 }
+
                 break;
             default:
                 break;
@@ -159,4 +176,5 @@ public class WriteNote extends AppCompatActivity {
         view.setDrawingCacheEnabled(true);
         return view.getDrawingCache(true);
     }
+
 }

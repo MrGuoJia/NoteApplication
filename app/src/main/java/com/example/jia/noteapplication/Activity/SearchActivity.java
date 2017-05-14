@@ -69,7 +69,7 @@ public class SearchActivity extends AppCompatActivity {
                     Toast.makeText(SearchActivity.this,"请输入检索信息",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Log.e("=========","没有-2");
+
                 SQLiteDatabase db=myNoteDatabaseHelper.getWritableDatabase();
                 String sql  = " Title like ? or Kind like ? or Plane like ? ";//多条件模糊查询
 
@@ -121,8 +121,8 @@ public class SearchActivity extends AppCompatActivity {
         btn_return.setOnClickListener(new View.OnClickListener() {//返回主界面
             @Override
             public void onClick(View v) {
-                Intent returnMain=new Intent(SearchActivity.this,MainActivity.class);
-                startActivity(returnMain);
+                /*Intent returnMain=new Intent(SearchActivity.this,MainActivity.class);
+                startActivity(returnMain);*/
                 SearchActivity.this.finish();
             }
         });

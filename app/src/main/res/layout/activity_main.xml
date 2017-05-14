@@ -41,8 +41,18 @@
             android:layout_marginRight="5dp"
             android:layout_gravity="right|bottom"
             android:src="@mipmap/add"
+            app:backgroundTint="#3399CC"
             android:layout_marginBottom="5dp"
             android:id="@+id/btn_add"
+            />
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/btn_add"
+            android:layout_marginRight="90dp"
+            app:backgroundTint="#3399CC"
+            android:src="@mipmap/save_net"
+            android:id="@+id/btn_sendToSave"
             />
     </RelativeLayout>
 

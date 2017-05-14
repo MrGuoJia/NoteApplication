@@ -48,6 +48,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import cn.bmob.v3.Bmob;
+
 /*
 *百度语音合成用的
 * App ID: 9627960
@@ -76,10 +79,12 @@ public class MainActivity extends AppCompatActivity implements DeleteListener,Sp
     // 语音合成客户端
     private SpeechSynthesizer mSpeechSynthesizer;
     private String mSampleDirPath;//用来写资源文件的路径
+    private FloatingActionButton btn_send_to_net;//跳转到新界面用 bomb保存到网络
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initBmob();//默认初始化Bmob
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         myNoteDatabaseHelper=new MyNoteDatabaseHelper(this,"NoteDatabase.db",null,1);//数据库名指定NoteDatabase.db
         setSupportActionBar(toolbar);//设置顶部为搜索框，并修改文字
@@ -90,6 +95,10 @@ public class MainActivity extends AppCompatActivity implements DeleteListener,Sp
         startTTS();//实现语音合成
         initialEnv();
         initGetVoice();
+    }
+
+    private void initBmob() {
+        Bmob.initialize(this, "6e7349e42c098dd87b16cdad0e3e5912");
     }
 
     private void initGetVoice() {
@@ -223,6 +232,13 @@ public class MainActivity extends AppCompatActivity implements DeleteListener,Sp
             public void onClick(View v) {
                 Intent i=new Intent(MainActivity.this,WriteNote.class);
                 startActivityForResult(i,1001);
+            }
+        });
+        btn_send_to_net= (FloatingActionButton) findViewById(R.id.btn_sendToSave);
+        btn_send_to_net.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
     }
@@ -374,7 +390,7 @@ public class MainActivity extends AppCompatActivity implements DeleteListener,Sp
         // 判断授权信息是否正确，如果正确则初始化语音合成器并开始语音合成，如果失败则做错误处理
         if (authInfo.isSuccess()) {
             mSpeechSynthesizer.initTts(TtsMode.MIX);
-            mSpeechSynthesizer.speak("点击语音图标,开始语音读备忘录");
+           // mSpeechSynthesizer.speak("点击语音图标,开始语音读备忘录");
         } else {
             // 授权失败
             Toast.makeText(MainActivity.this,"授权失败",Toast.LENGTH_SHORT).show();

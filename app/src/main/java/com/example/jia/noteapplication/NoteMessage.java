@@ -4,12 +4,14 @@ import android.graphics.Bitmap;
 
 import java.util.Date;
 
+import cn.bmob.v3.BmobObject;
+
 
 /**
  * Created by jia on 2017/5/3.
  */
 
-public class NoteMessage {
+public class NoteMessage extends BmobObject {
     private  String tittle;//备注标题
     private String kind;//备注类型
     private String plane;//备注信息
